@@ -4,7 +4,7 @@
 A fun, fully responsive single-page marketing website built for RCW based exactly on the provided banner design, now featuring the photorealistic dogs Daisy (Schnauzer, pressure washing) and Groot (French Bulldog, zero-turn mowing) from the latest reference photo.
 
 ## Features
-- **Hero Video**: Custom 12-second photorealistic funny video with dogs exactly matching the color and appearance from real-team.jpg (the "dream team in action" image): Daisy (Schnauzer) and Groot (French Bulldog) with exact colors from the reference. Pressure washing + zero-turn mower action. High-energy, comedic. Live-action style.
+- **Hero Video**: Custom 12-second photorealistic funny video with dogs exactly matching the color and appearance from real-team.jpg. Daisy (girl's voice) says: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner." Groot (boy's voice) says: "Hi, I'm Groot, your lawn care specialist." Then both say "We're the Ruff Crew!" at the end. Uses Web SpeechSynthesis with voice tuning, on-screen captions, and video volume ducking. High-energy, comedic. Live-action style.
 - **Exact brand match**: Navy blue + emerald green color scheme, floating leaves, water splash motifs, big prominent phone number, RCW logo treatment.
 - **Fully responsive**: Beautiful on phones, tablets, and desktop. Mobile hamburger menu.
 - **Interactive**:
@@ -21,7 +21,7 @@ A fun, fully responsive single-page marketing website built for RCW based exactl
 - Soft Washing: starting at $220.00
 - Fertilization & Weed Control: starting at $65.00 / visit
 
-Mascot names: Daisy (pressure washing Schnauzer), Groot (zero-turn mowing French Bulldog)
+Mascot names: Daisy (pressure washing Schnauzer, girl's voice), Groot (lawn care French Bulldog, boy's voice). They introduce "Ruff Cut and Wash" and close with "We're the Ruff Crew!" in the hero video.
 
 ## How to view
 Just open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).

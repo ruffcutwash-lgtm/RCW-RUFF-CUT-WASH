@@ -945,9 +945,10 @@
             if (!video) return;
 
             const dialogueTimeline = [
-                { time: 2.0, text: "Hi! I'm Daisy. I blast away the toughest dirt and algae!", speaker: "daisy" },
-                { time: 6.8, text: "And I'm Groot! I mow perfect stripes with my zero-turn.", speaker: "groot" },
-                { time: 10.2, text: "Together we make your home and lawn shine. Call 239-406-1334!", speaker: "daisy" }
+                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner.", speaker: "daisy" },
+                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist.", speaker: "groot" },
+                { time: 9.5, text: "We're the Ruff Crew!", speaker: "daisy" },
+                { time: 10.8, text: "We're the Ruff Crew!", speaker: "groot" }
             ];
 
             let lastTriggeredIndex = -1;
@@ -958,23 +959,24 @@
             captionEl.id = 'mascot-dialogue';
             captionEl.style.cssText = `
                 position: absolute; 
-                bottom: 20%; 
+                bottom: 18%; 
                 left: 50%; 
                 transform: translateX(-50%); 
                 background: rgba(15, 76, 129, 0.82); 
                 color: #fff; 
-                padding: 7px 20px; 
-                border-radius: 9999px; 
-                font-size: 0.9rem; 
+                padding: 8px 16px; 
+                border-radius: 12px; 
+                font-size: 0.85rem; 
                 font-weight: 600; 
-                letter-spacing: 0.015em; 
+                letter-spacing: 0.01em; 
                 z-index: 35; 
                 opacity: 0; 
                 transition: opacity 0.25s ease; 
                 pointer-events: none; 
-                max-width: 82%; 
+                max-width: 88%; 
                 text-align: center; 
-                white-space: nowrap; 
+                white-space: normal; 
+                line-height: 1.3;
                 box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
             `;
             const heroContainer = video.parentElement;
