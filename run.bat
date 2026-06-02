@@ -1,0 +1,3 @@
+@echo off
+echo Starting Ruff Cut & Wash launcher...
+powershell -ExecutionPolicy Bypass -File "%~dp0run.ps1"
