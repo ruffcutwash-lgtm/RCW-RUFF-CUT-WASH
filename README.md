@@ -4,7 +4,7 @@
 A fun, fully responsive single-page marketing website built for RCW based exactly on the provided banner design, now featuring the photorealistic dogs from the latest reference photo.
 
 ## Features
-- **Hero Video**: Custom 12-second photorealistic funny video of the exact dogs from the latest attached detailed photo (Pressure Pete the Schnauzer pressure washing + Mower Max the French Bulldog on a zero-turn lawn mower) in action. The French Bulldog now has gray as the dominant color (blue-gray brindle) with brown/tan peaking through in streaks (Schnauzer unchanged). High-energy, comedic, family-friendly. Live-action style. Mower is realistic zero-turn model.
+- **Hero Video**: Custom 12-second photorealistic funny video of the exact dogs from the latest attached detailed photo (Pressure Pete the Schnauzer pressure washing + Mower Max the French Bulldog on a zero-turn lawn mower) in action. The French Bulldog now has even more gray as the dominant color (strong blue-gray brindle) with much weaker and subtler tan/brown streaks peaking through (Schnauzer unchanged). High-energy, comedic, family-friendly. Live-action style. Mower is realistic zero-turn model.
 - **Exact brand match**: Navy blue + emerald green color scheme, floating leaves, water splash motifs, big prominent phone number, RCW logo treatment.
 - **Fully responsive**: Beautiful on phones, tablets, and desktop. Mobile hamburger menu.
 - **Interactive**:
@@ -13,7 +13,7 @@ A fun, fully responsive single-page marketing website built for RCW based exactl
   - Video pause/play control
   - Smooth scrolling + easter eggs (press P or M)
 - **Sections**: Hero, Services, Meet the Mascots, Before/After Gallery, Why RCW + stats, Testimonials, Final CTA, Footer.
-- All assets updated with photorealistic dogs directly based on the newest attached detailed reference photo, with further refined coloring on the French Bulldog: gray is now the dominant color (blue-gray brindle base), with brown/tan peaking through in streaks (as specified). Files: real-team.jpg, real-schnauzer.jpg, real-frenchie.jpg. Graphic RCW logo kept for brand. Mower in video is zero-turn. Before/after and other elements remain.
+- All assets updated with photorealistic dogs directly based on the newest attached detailed reference photo, with further refined coloring on the French Bulldog: even more gray dominant (strong blue-gray brindle base), with weaker and subtler tan/brown streaks peaking through (gray heavily dominates, tan is very faint). Files: real-team.jpg, real-schnauzer.jpg, real-frenchie.jpg. Graphic RCW logo kept for brand. Mower in video is zero-turn. Before/after and other elements remain.
 
 ## How to view
 Just open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
