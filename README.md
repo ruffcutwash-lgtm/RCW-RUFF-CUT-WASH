@@ -1,10 +1,10 @@
 # RCW Lawn Care & Pressure / Soft Washing
 **Responsive Website + Hero Video**
 
-A fun, fully responsive single-page marketing website built for RCW based exactly on the provided banner design, now featuring the photorealistic dogs from the latest reference photo.
+A fun, fully responsive single-page marketing website built for RCW based exactly on the provided banner design, now featuring the photorealistic dogs Daisy (Schnauzer, pressure washing) and Groot (French Bulldog, zero-turn mowing) from the latest reference photo.
 
 ## Features
-- **Hero Video**: Custom 12-second photorealistic funny video of the exact dogs from the latest attached detailed photo (Pressure Pete the Schnauzer pressure washing + Mower Max the French Bulldog on a zero-turn lawn mower) in action. The French Bulldog now has even more gray as the dominant color (strong blue-gray brindle) with much weaker and subtler tan/brown streaks peaking through (Schnauzer unchanged). High-energy, comedic, family-friendly. Live-action style. Mower is realistic zero-turn model.
+- **Hero Video**: Custom 12-second photorealistic funny video with dogs exactly matching the color and appearance from real-team.jpg (the "dream team in action" image): Daisy (Schnauzer) and Groot (French Bulldog) with exact colors from the reference. Pressure washing + zero-turn mower action. High-energy, comedic. Live-action style.
 - **Exact brand match**: Navy blue + emerald green color scheme, floating leaves, water splash motifs, big prominent phone number, RCW logo treatment.
 - **Fully responsive**: Beautiful on phones, tablets, and desktop. Mobile hamburger menu.
 - **Interactive**:
@@ -13,7 +13,15 @@ A fun, fully responsive single-page marketing website built for RCW based exactl
   - Video pause/play control
   - Smooth scrolling + easter eggs (press P or M)
 - **Sections**: Hero, Services, Meet the Mascots, Before/After Gallery, Why RCW + stats, Testimonials, Final CTA, Footer.
-- All assets updated with photorealistic dogs directly based on the newest attached detailed reference photo, with further refined coloring on the French Bulldog: even more gray dominant (strong blue-gray brindle base), with weaker and subtler tan/brown streaks peaking through (gray heavily dominates, tan is very faint). Files: real-team.jpg, real-schnauzer.jpg, real-frenchie.jpg. Graphic RCW logo kept for brand. Mower in video is zero-turn. Before/after and other elements remain.
+- Both dogs now perfectly consistent: real-frenchie.jpg (Daisy) and real-schnauzer.jpg (Groot) (used in "THE REAL BOSSES" / Meet the Team cards) and banner.jpg exactly match the dogs' colors, fur, and appearance in real-team.jpg (used in "The dream team in action" gallery section) via image_edit on the reference team photo. Video aligned. Graphic RCW logo kept. Zero-turn mower.
+
+## Pricing (as of latest update)
+- Lawn Care & Mowing: starting at $45.00 (most popular)
+- Pressure Washing: starting at $125.00
+- Soft Washing: starting at $220.00
+- Fertilization & Weed Control: starting at $65.00 / visit
+
+Mascot names: Daisy (pressure washing Schnauzer), Groot (zero-turn mowing French Bulldog)
 
 ## How to view
 Just open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
