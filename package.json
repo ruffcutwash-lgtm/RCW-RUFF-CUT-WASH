@@ -1,0 +1,12 @@
+﻿{
+    "version":  "1.0.0",
+    "name":  "rcw-lawn-care",
+    "description":  "Ruff Cut \u0026 Wash - Responsive website with ElevenLabs TTS for mascot video",
+    "scripts":  {
+                    "start":  "node server.js",
+                    "dev":  "node server.js"
+                },
+    "author":  "",
+    "license":  "MIT",
+    "main":  "server.js"
+}
