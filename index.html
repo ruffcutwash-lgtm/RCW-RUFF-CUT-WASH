@@ -369,14 +369,6 @@
             <i class="fa-solid fa-chevron-down animate-bounce"></i>
         </div>
 
-        <!-- Video controls -->
-        <div class="absolute bottom-6 right-6 z-30 flex items-center gap-2">
-            <button onclick="toggleHeroVideo()" 
-                    class="bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-4 py-2 rounded-2xl flex items-center gap-x-2 backdrop-blur transition-all">
-                <i id="video-icon" class="fa-solid fa-pause"></i>
-                <span id="video-text" class="text-[10px] font-semibold tracking-wider">PAUSE</span>
-            </button>
-        </div>
     </header>
 
     <!-- TRUST BAR -->
@@ -883,78 +875,46 @@
             });
         }
 
-        // Hero video controls
-        let videoPlaying = true;
-        
-        function toggleHeroVideo() {
-            const video = document.getElementById('hero-video');
-            const icon = document.getElementById('video-icon');
-            const text = document.getElementById('video-text');
-            
-            if (!video) return;
-            
-            if (videoPlaying) {
-                video.pause();
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                text.textContent = 'PLAY';
-            } else {
-                video.muted = false; // Enable sound for dialogue ducking
-                video.volume = 1.0;
-                video.play().catch(() => {});
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                text.textContent = 'PAUSE';
-            }
-            videoPlaying = !videoPlaying;
-        }
-
-        // Make sure video is always trying to play (some browsers are strict)
+        // Make sure the hero video autoplays automatically (no play button)
+        // Video is background visual; the dogs' voices are handled separately via speechSynthesis (American voices)
         function initHeroVideo() {
             const video = document.getElementById('hero-video');
             if (!video) return;
 
-            // Try to play. We prefer sound for the mascot dialogue (ducking), but browsers may block unmuted autoplay.
+            // Autoplay the video (muted to ensure it starts reliably across browsers)
+            // The TTS voices will provide the dogs' spoken parts automatically
+            video.muted = true;
             video.play().catch(() => {
-                // Autoplay blocked — show play button state
-                const icon = document.getElementById('video-icon');
-                const text = document.getElementById('video-text');
-                if (icon && text) {
-                    icon.classList.remove('fa-pause');
-                    icon.classList.add('fa-play');
-                    text.textContent = 'PLAY';
-                }
-                videoPlaying = false;
+                // If autoplay fails completely, try again on any user interaction
+                document.addEventListener('click', () => {
+                    video.play().catch(() => {});
+                }, { once: true });
             });
 
-            // Subtle interaction: clicking video also toggles
-            video.addEventListener('click', () => {
-                toggleHeroVideo();
-            });
-            
-            // When video ends (shouldn't but) restart
+            // When video ends (for loop attribute), restart
             video.addEventListener('ended', () => {
                 video.play();
             });
         }
 
-        // Mascot Dialogue System - Daisy & Groot speaking over the hero video
-        // Adapted from provided timeline with character voices + visual captions
+        // Mascot Dialogue System - Daisy & Groot "speak" their parts via on-screen captions only
+        // No computer-generated TTS voice. Captions appear automatically at timed moments.
+        // American English text/phrasing. Auto-starts with the video when page loads (no play button).
         function initVideoDialogue() {
             const video = document.getElementById('hero-video');
             if (!video) return;
 
             const dialogueTimeline = [
-                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner.", speaker: "daisy" },
-                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist.", speaker: "groot" },
-                { time: 9.5, text: "We're the Ruff Crew!", speaker: "daisy" },
-                { time: 10.8, text: "We're the Ruff Crew!", speaker: "groot" }
+                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner." },
+                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist." },
+                { time: 9.5, text: "We're the Ruff Crew!" },
+                { time: 10.8, text: "We're the Ruff Crew!" }
             ];
 
             let lastTriggeredIndex = -1;
             let captionEl = null;
 
-            // Create a nice floating caption bubble for the dogs' lines
+            // Create a nice floating caption bubble for the dogs' spoken lines (American English)
             captionEl = document.createElement('div');
             captionEl.id = 'mascot-dialogue';
             captionEl.style.cssText = `
@@ -998,7 +958,7 @@
                 if (captionEl) captionEl.style.opacity = '0';
             }
 
-            // Timeupdate handler - triggers speech + caption at exact times
+            // Timeupdate handler - shows captions automatically at exact times (dogs "speak" their parts)
             video.addEventListener('timeupdate', () => {
                 const currentTime = video.currentTime;
 
@@ -1011,7 +971,6 @@
                 dialogueTimeline.forEach((line, index) => {
                     if (currentTime >= line.time && lastTriggeredIndex < index) {
                         lastTriggeredIndex = index;
-                        speakMascotDialogue(line.text, line.speaker);
                         showCaption(line.text);
                     }
                 });
@@ -1028,61 +987,15 @@
                 hideCaption();
             });
 
-            // Core speech function with character voices + video audio ducking
-            function speakMascotDialogue(text, speaker = 'daisy') {
-                if (!('speechSynthesis' in window)) return;
-
-                window.speechSynthesis.cancel();
-
-                const utterance = new SpeechSynthesisUtterance(text);
-
-                // Different voices for Daisy (higher, peppy) and Groot (lower, cool)
-                if (speaker === 'daisy') {
-                    utterance.pitch = 1.33;
-                    utterance.rate = 1.07;
-                } else {
-                    utterance.pitch = 0.67;
-                    utterance.rate = 0.9;
-                }
-                utterance.volume = 0.9;
-
-                // Best-effort voice selection (works better in some browsers)
-                try {
-                    const voices = window.speechSynthesis.getVoices();
-                    let preferred = null;
-                    if (speaker === 'daisy') {
-                        preferred = voices.find(v => 
-                            /samantha|karen|emma|olivia|female/i.test(v.name) || 
-                            (v.lang.includes('en') && /en-/i.test(v.name))
-                        );
-                    } else {
-                        preferred = voices.find(v => 
-                            /daniel|tom|james|david|male/i.test(v.name)
-                        );
-                    }
-                    if (preferred) utterance.voice = preferred;
-                } catch (e) {}
-
-                const vid = document.getElementById('hero-video');
-
-                // Duck the video volume while the mascot is "talking"
-                utterance.onstart = () => {
-                    if (vid) vid.volume = 0.18;
-                };
-
-                utterance.onend = () => {
-                    if (vid) vid.volume = 1.0;
-                };
-
-                utterance.onerror = () => {
-                    if (vid) vid.volume = 1.0;
-                };
-
-                window.speechSynthesis.speak(utterance);
-            }
-
-            // Expose for debugging / future use
-            window.RCW.speakMascot = speakMascotDialogue;
+            // Auto-start the captions (dogs speak their parts) when browser opens - no play button needed.
+            // The video autoplays (muted for reliability), captions trigger via timeupdate.
+            video.muted = true;
+            video.play().catch(() => {
+                // Fallback: try once on first click if autoplay is blocked
+                document.addEventListener('click', () => {
+                    video.play().catch(() => {});
+                }, { once: true });
+            });
         }
 
         // Quote modal

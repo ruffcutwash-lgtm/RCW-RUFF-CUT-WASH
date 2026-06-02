@@ -4,7 +4,7 @@
 A fun, fully responsive single-page marketing website built for RCW based exactly on the provided banner design, now featuring the photorealistic dogs Daisy (Schnauzer, pressure washing) and Groot (French Bulldog, zero-turn mowing) from the latest reference photo.
 
 ## Features
-- **Hero Video**: Custom 12-second photorealistic funny video with dogs exactly matching the color and appearance from real-team.jpg. Daisy (girl's voice) says: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner." Groot (boy's voice) says: "Hi, I'm Groot, your lawn care specialist." Then both say "We're the Ruff Crew!" at the end. Uses Web SpeechSynthesis with voice tuning, on-screen captions, and video volume ducking. High-energy, comedic. Live-action style.
+- **Hero Video**: Custom 12-second photorealistic funny video with dogs exactly matching the color and appearance from real-team.jpg. On-screen captions (no computer-generated TTS) automatically display the dogs' spoken parts when the page loads (auto-start, no play button needed): Daisy: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner." Groot: "Hi, I'm Groot, your lawn care specialist." Then both: "We're the Ruff Crew!" (Daisy then Groot). American English phrasing. High-energy, comedic. Live-action style. Video autoplays (muted for reliability).
 - **Exact brand match**: Navy blue + emerald green color scheme, floating leaves, water splash motifs, big prominent phone number, RCW logo treatment.
 - **Fully responsive**: Beautiful on phones, tablets, and desktop. Mobile hamburger menu.
 - **Interactive**:
@@ -21,7 +21,7 @@ A fun, fully responsive single-page marketing website built for RCW based exactl
 - Soft Washing: starting at $220.00
 - Fertilization & Weed Control: starting at $65.00 / visit
 
-Mascot names: Daisy (pressure washing Schnauzer, girl's voice), Groot (lawn care French Bulldog, boy's voice). They introduce "Ruff Cut and Wash" and close with "We're the Ruff Crew!" in the hero video.
+Mascot names: Daisy (pressure washing Schnauzer), Groot (lawn care French Bulldog). In the hero video, on-screen captions (no TTS) automatically show their spoken parts on page load: Daisy's lines + Groot's lines + both saying "We're the Ruff Crew!". American English. Video autoplays with captions. No play button.
 
 ## How to view
 Just open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
