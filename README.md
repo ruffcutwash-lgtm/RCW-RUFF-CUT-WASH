@@ -65,14 +65,18 @@ The hero video now features high-quality ElevenLabs voices for the dogs' spoken 
 
 ### Setup (required for audio voices)
 1. Get an ElevenLabs API key (free tier available at elevenlabs.io).
-2. Set the environment variable before running the server:
-   - PowerShell: $env:ELEVENLABS_API_KEY = 'your-key-here'
-   - Or permanently via System Environment Variables.
-3. Run the backend (serves the site + secure TTS proxy):
-   `
+2. Create a `.env` file in the project root (copy `.env.example`):
+   ```
+   ELEVENLABS_API_KEY=sk_your_key_here
+   PORT=3000
+   ```
+   `server.js` auto-loads `.env` on startup (no extra packages).
+3. (Optional) You can also set via PowerShell for the session: `$env:ELEVENLABS_API_KEY = 'your-key-here'`
+4. Run the backend (serves the site + secure TTS proxy):
+   ```
    node server.js
-   `
-4. Open http://localhost:3000 (not the raw index.html file, or the /api/tts route won't work).
+   ```
+5. Open http://localhost:3000 (not the raw index.html file directly).
 
 The server proxies to ElevenLabs securely — your key never leaves the server.
 
@@ -93,3 +97,23 @@ If the key is missing, the server returns an error and audio fetch will fail gra
 - Groot: pNInz6obpgDQGcFmaJgB (Adam)
 
 You can change them in the JS timeline if you have preferred ElevenLabs voices.
+
+## How to Run the Project (Important!)
+
+This is a static website + custom Node backend (server.js at project root handles both static serving and API routes like /api/tts and /api/test-voice).
+
+**You MUST run the server and open via localhost, not open index.html directly as a file!**
+
+1. Make sure Node.js is installed.
+2. Put your real ElevenLabs key in .env (replace the placeholder):
+   ELEVENLABS_API_KEY=sk-...
+3. Run:
+   node server.js
+   (or use the run.ps1: powershell -ExecutionPolicy Bypass -File run.ps1 )
+4. In browser, go to: http://localhost:3000
+5. The hero video auto plays. The yellow "Test Voice" button will now work (fetches /api/test-voice which checks the key and returns audio).
+
+If you open the .html file directly (file://...), the JS fetch to /api/* will fail with "Failed to fetch" because no backend server is handling the route.
+
+The API routes are implemented inside server.js (the entry point for the backend in this custom setup - not a subfolder like in Next.js or similar frameworks).
+
