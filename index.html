@@ -897,24 +897,30 @@
             });
         }
 
-        // Mascot Dialogue System - Daisy & Groot "speak" their parts via on-screen captions only
-        // No computer-generated TTS voice. Captions appear automatically at timed moments.
-        // American English text/phrasing. Auto-starts with the video when page loads (no play button).
+        // ElevenLabs TTS integration for Daisy & Groot
+        // Secure backend proxy at /api/tts (uses ELEVENLABS_API_KEY on server only)
+        // Timeline triggers fetch audio + play over video with 20% ducking.
+        // American voices via specific ElevenLabs voice IDs.
+        // Auto starts with video on page load. No TTS in browser (no computer voice on client).
         function initVideoDialogue() {
             const video = document.getElementById('hero-video');
             if (!video) return;
 
+            const DAISY_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // Rachel - natural American female
+            const GROOT_VOICE_ID = "pNInz6obpgDQGcFmaJgB"; // Adam - natural American male
+
             const dialogueTimeline = [
-                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner." },
-                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist." },
-                { time: 9.5, text: "We're the Ruff Crew!" },
-                { time: 10.8, text: "We're the Ruff Crew!" }
+                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner.", voiceId: DAISY_VOICE_ID },
+                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist.", voiceId: GROOT_VOICE_ID },
+                { time: 9.5, text: "We're the Ruff Crew!", voiceId: DAISY_VOICE_ID },
+                { time: 10.8, text: "We're the Ruff Crew!", voiceId: GROOT_VOICE_ID }
             ];
 
             let lastTriggeredIndex = -1;
             let captionEl = null;
+            let preloadedAudios = [];
 
-            // Create a nice floating caption bubble for the dogs' spoken lines (American English)
+            // Create caption bubble (kept for visual "speech" reinforcement)
             captionEl = document.createElement('div');
             captionEl.id = 'mascot-dialogue';
             captionEl.style.cssText = `
@@ -958,44 +964,96 @@
                 if (captionEl) captionEl.style.opacity = '0';
             }
 
-            // Timeupdate handler - shows captions automatically at exact times (dogs "speak" their parts)
+            async function fetchAndCreateAudio(line) {
+                try {
+                    const res = await fetch('/api/tts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: line.text, voiceId: line.voiceId })
+                    });
+                    if (!res.ok) throw new Error('TTS fetch failed: ' + res.status);
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const audio = new Audio(url);
+                    audio.preload = 'auto';
+                    return audio;
+                } catch (e) {
+                    console.error('Failed to load ElevenLabs audio for:', line.text, e);
+                    return null;
+                }
+            }
+
+            async function preloadAudios() {
+                preloadedAudios = new Array(dialogueTimeline.length).fill(null);
+                // Preload in parallel for better readiness
+                const promises = dialogueTimeline.map((line, i) => 
+                    fetchAndCreateAudio(line).then(audio => { preloadedAudios[i] = audio; })
+                );
+                await Promise.all(promises);
+                console.log('ElevenLabs audios preloaded for timeline.');
+            }
+
+            function playAudioForIndex(index) {
+                const audio = preloadedAudios[index];
+                if (!audio) {
+                    console.warn('No preloaded audio for index', index);
+                    return;
+                }
+                const vid = document.getElementById('hero-video');
+                audio.currentTime = 0;
+                if (vid) vid.volume = 0.2; // Duck video to 20%
+                audio.play().then(() => {
+                    audio.onended = () => {
+                        if (vid) vid.volume = 1.0;
+                    };
+                }).catch(err => {
+                    console.warn('Audio playback error (may need user gesture):', err);
+                    if (vid) vid.volume = 1.0;
+                });
+            }
+
+            // Timeupdate - play the corresponding ElevenLabs audio + show caption
             video.addEventListener('timeupdate', () => {
                 const currentTime = video.currentTime;
 
-                // Reset tracker when video loops back to the start
                 if (currentTime < 0.7 && lastTriggeredIndex >= dialogueTimeline.length - 1) {
                     lastTriggeredIndex = -1;
                     hideCaption();
+                    preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
                 }
 
                 dialogueTimeline.forEach((line, index) => {
                     if (currentTime >= line.time && lastTriggeredIndex < index) {
                         lastTriggeredIndex = index;
+                        playAudioForIndex(index);
                         showCaption(line.text);
                     }
                 });
             });
 
-            // Reset when user seeks or video loops
             video.addEventListener('seeked', () => {
                 lastTriggeredIndex = -1;
                 hideCaption();
+                preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
             });
 
             video.addEventListener('ended', () => {
                 lastTriggeredIndex = -1;
                 hideCaption();
+                preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
             });
 
-            // Auto-start the captions (dogs speak their parts) when browser opens - no play button needed.
-            // The video autoplays (muted for reliability), captions trigger via timeupdate.
+            // Auto-start everything when browser opens (no play button)
+            // Video autoplays muted; ElevenLabs audios play at timeline times with ducking
             video.muted = true;
             video.play().catch(() => {
-                // Fallback: try once on first click if autoplay is blocked
                 document.addEventListener('click', () => {
                     video.play().catch(() => {});
                 }, { once: true });
             });
+
+            // Start preloading the audio clips immediately
+            preloadAudios();
         }
 
         // Quote modal

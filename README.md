@@ -59,3 +59,37 @@ rcw-lawn-care/
 Built with Tailwind CSS (CDN) + vanilla JS. No build step required.
 
 The pups approve. 🐶🚜💦
+## ElevenLabs TTS for Mascot Dialogue (Daisy & Groot)
+
+The hero video now features high-quality ElevenLabs voices for the dogs' spoken parts (no browser TTS).
+
+### Setup (required for audio voices)
+1. Get an ElevenLabs API key (free tier available at elevenlabs.io).
+2. Set the environment variable before running the server:
+   - PowerShell: $env:ELEVENLABS_API_KEY = 'your-key-here'
+   - Or permanently via System Environment Variables.
+3. Run the backend (serves the site + secure TTS proxy):
+   `
+   node server.js
+   `
+4. Open http://localhost:3000 (not the raw index.html file, or the /api/tts route won't work).
+
+The server proxies to ElevenLabs securely — your key never leaves the server.
+
+### How it works
+- Timeline in JS triggers at specific video times.
+- Fetches audio from /api/tts (POST {text, voiceId}).
+- Plays the audio element over the video.
+- Video volume ducks to 20% while any dog is speaking, restores to 100% when done.
+- Preloads all clips on page load for timing accuracy.
+- American voices: Rachel (Daisy - female) and Adam (Groot - male).
+- Captions still appear as visual backup.
+- Auto-starts when page loads (video + voices). No play button.
+
+If the key is missing, the server returns an error and audio fetch will fail gracefully (captions still work).
+
+### Voice IDs used
+- Daisy: 21m00Tcm4TlvDq8ikWAM (Rachel)
+- Groot: pNInz6obpgDQGcFmaJgB (Adam)
+
+You can change them in the JS timeline if you have preferred ElevenLabs voices.
