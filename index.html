@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Poppins:wght@600;700&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@600;700&display=swap');
         
         :root {
             --primary-blue: #0f4c81;
@@ -66,6 +66,26 @@
         @keyframes leafFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-25px) rotate(8deg); }
+        }
+
+        /* Realistic multi-axis float for natural drifting leaves in air */
+        @keyframes realisticLeafFloat {
+            0% {
+                transform: translateY(108vh) rotate(var(--start-rot, -15deg));
+                opacity: 0;
+            }
+            6% { opacity: 0.82; }
+            42% {
+                transform: translateY(38vh) translateX(14px) rotate(calc(var(--start-rot, -15deg) + 19deg));
+            }
+            78% {
+                transform: translateY(-8vh) translateX(-11px) rotate(calc(var(--start-rot, -15deg) - 14deg));
+                opacity: 0.82;
+            }
+            100% {
+                transform: translateY(-55px) rotate(var(--start-rot, -15deg));
+                opacity: 0;
+            }
         }
 
         .water-splash {
@@ -171,13 +191,37 @@
             letter-spacing: -0.08em;
         }
 
+        .hero-impact {
+            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-montserrat {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
         .floating-leaf {
             position: absolute;
             font-size: 1.1rem;
-            opacity: 0.7;
+            opacity: 0.75;
             z-index: 1;
             pointer-events: none;
-            animation: leafDrift 7s ease-in-out infinite;
+            animation: leafDrift 9s ease-in-out infinite;
+            filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.1));
+        }
+
+        /* Floating leaves using PNG images with transparent backgrounds for realistic overlay effect on the dark hero.
+           Larger sizes, natural floating animation with drop shadow for depth. */
+        .leaf {
+            position: absolute;
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0.88;
+            /* natural soft shadow for depth while floating in air */
+            filter: drop-shadow(2px 4px 5px rgba(0, 0, 0, 0.25));
+            animation: realisticLeafFloat 14s ease-in-out infinite;
         }
 
         .testimonial {
@@ -199,6 +243,14 @@
     </style>
 </head>
 <body class="bg-white text-slate-800 overflow-x-hidden">
+    <!-- Prominent help banner (shows when opened directly as a file, or always as reminder) -->
+    <div id="run-instructions" style="background:#1e40af; color:#fff; padding:10px 16px; font-size:14px; text-align:center; position:relative; z-index:50;">
+        <strong>Full site:</strong> 
+        Double-click <code>run.ps1</code> (or run <code>node server.js</code>), then visit <a href="http://localhost:3000" style="color:#93c5fd; text-decoration:underline;">http://localhost:3000</a>.
+        <span style="margin-left:12px; opacity:0.8;">(Opening this .html file directly shows a static version only. Hero video is now silent.)</span>
+        <button onclick="this.parentElement.style.display='none'" style="position:absolute; right:8px; top:6px; background:rgba(255,255,255,0.2); border:none; color:white; padding:2px 8px; border-radius:4px; cursor:pointer;">✕</button>
+    </div>
+
     <!-- NAVBAR -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-100 transition-all">
         <div class="max-w-screen-2xl mx-auto">
@@ -206,7 +258,7 @@
                 <!-- Logo -->
                 <div class="flex items-center gap-x-3">
                     <div class="flex items-center">
-                        <img src="assets/images/logo.jpg" alt="RCW Logo" class="h-11 w-11 rounded-xl object-cover ring-2 ring-offset-2 ring-offset-white ring-[#0f4c81]/20">
+                        <img src="assets/images/logo.png" alt="RCW Logo" class="h-11 w-11 rounded-xl object-cover ring-2 ring-offset-2 ring-offset-white ring-[#0f4c81]/20">
                         <div class="ml-2.5">
                             <div class="flex items-baseline">
                                 <span class="rcw-logo-text text-3xl font-black tracking-tighter text-[#0f4c81]">RCW</span>
@@ -273,107 +325,97 @@
     </nav>
 
     <!-- HERO -->
-    <header class="relative h-[100dvh] min-h-[680px] pt-16 flex items-center justify-center overflow-hidden bg-[#0a2744]">
-        <!-- Background Video -->
+    <header class="relative h-[100dvh] min-h-[680px] pt-16 flex items-center justify-center overflow-hidden bg-white">
+        <!-- Background Video - strongly biased to the right so dogs appear further right in the hero area, clear of the left text -->
         <video id="hero-video"
                class="hero-video absolute inset-0 z-0"
                autoplay 
                loop 
                playsinline
+               style="object-position: right center;"
                poster="assets/images/banner.jpg">
             <source src="assets/videos/hero.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
-        <!-- Dark + gradient overlay for text legibility (mimics original banner contrast) -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/55 z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0f4c81]/70 via-transparent to-transparent z-10"></div>
+        <!-- Subtle water-inspired overlay matching original banner scheme (light blue with water splash on left) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-white/30 via-white/10 to-white/20 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0ea5e9]/20 via-transparent to-transparent z-10"></div>
+        <!-- Left water splash visual accent inspired by original banner -->
+        <div class="absolute inset-0 z-10 pointer-events-none" style="background: radial-gradient(circle at 5% 50%, rgba(14,165,233,0.25) 0%, transparent 40%);"></div>
 
-        <!-- Floating decorative leaves (matching original design) -->
-        <div class="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-            <div class="floating-leaf text-green-400 text-3xl" style="top: 18%; left: 12%; animation-delay: 0s;">🍃</div>
-            <div class="floating-leaf text-emerald-300 text-4xl" style="top: 28%; left: 23%; animation-delay: 1.6s;">🌿</div>
-            <div class="floating-leaf text-green-300 text-2xl" style="top: 14%; right: 19%; animation-delay: 3.2s;">🍃</div>
-            <div class="floating-leaf text-emerald-400 text-3xl" style="top: 62%; right: 11%; animation-delay: 2.1s;">🌱</div>
-            <div class="floating-leaf text-green-200 text-2xl" style="top: 71%; left: 8%; animation-delay: 4.8s;">🍃</div>
+        <!-- Floating leaves using PNG images (with transparent backgrounds) scattered throughout the entire hero background for a natural floating-in-the-air effect, like the original banner.
+             Distributed across left/center/right and top/mid/lower to fill the frame behind the content. -->
+        <div class="absolute inset-0 z-15 pointer-events-none overflow-hidden" id="floating-leaves">
+            <!-- spread across full hero for background floating -->
+            <img src="assets/images/leaf1.png" class="leaf" style="top: 8%; left: 6%; width: 58px; transform: rotate(-18deg); animation-delay: -1.8s;">
+            <img src="assets/images/leaf2.png" class="leaf" style="top: 15%; left: 42%; width: 85px; transform: rotate(14deg); animation-delay: -4.5s;">
+            <img src="assets/images/leaf3.png" class="leaf" style="top: 6%; right: 12%; width: 52px; transform: rotate(-28deg); animation-delay: -0.9s;">
+            <img src="assets/images/leaf4.png" class="leaf" style="top: 32%; left: 8%; width: 72px; transform: rotate(8deg); animation-delay: -5.2s;">
+            <img src="assets/images/leaf5.png" class="leaf" style="top: 52%; right: 7%; width: 65px; transform: rotate(-12deg); animation-delay: -2.7s;">
+            <img src="assets/images/leaf1.png" class="leaf" style="top: 22%; right: 5%; width: 48px; transform: rotate(25deg); animation-delay: -6.8s;">
+            <img src="assets/images/leaf3.png" class="leaf" style="top: 38%; left: 55%; width: 78px; transform: rotate(-6deg); animation-delay: -1.2s;">
+            <img src="assets/images/leaf5.png" class="leaf" style="top: 68%; left: 12%; width: 82px; transform: rotate(15deg); animation-delay: -7.5s;">
         </div>
 
-        <!-- Hero Content -->
+        <!-- Hero Content - narrow left column (no transparent banner/panel) so dogs are moved further right in the video area and clearly visible -->
         <div class="relative z-30 max-w-screen-2xl mx-auto px-6 md:px-10 w-full">
-            <div class="max-w-2xl">
-                <!-- Top badge -->
-                <div class="inline-flex items-center gap-x-2 bg-white/90 backdrop-blur px-4 py-1 rounded-3xl mb-6 shadow">
+            <div class="max-w-sm">
+                <!-- Top badge - styled after original banner -->
+                <div class="inline-flex items-center gap-x-2 bg-white/95 backdrop-blur px-5 py-1 rounded-3xl mb-6 shadow border border-[#0f4c81]/10">
                     <div class="flex -space-x-1">
-                        <div class="w-5 h-5 bg-[#0f4c81] rounded-full ring-1 ring-white"></div>
-                        <div class="w-5 h-5 bg-emerald-500 rounded-full ring-1 ring-white"></div>
+                        <div class="w-5 h-5 bg-emerald-600 rounded-full ring-1 ring-[#0f4c81]/20"></div>
+                        <div class="w-5 h-5 bg-[#0f4c81] rounded-full ring-1 ring-[#0f4c81]/20"></div>
                     </div>
-                    <span class="text-xs font-bold tracking-widest text-[#0f4c81]">SOUTHWEST FLORIDA'S #1</span>
+                    <span class="text-xs font-bold tracking-widest text-black hero-montserrat">SOUTHWEST FLORIDA'S RESIDENTIAL & COMMERCIAL #1</span>
                 </div>
 
-                <!-- Main Headline -->
-                <h1 class="text-white text-[3.1rem] md:text-[3.85rem] lg:text-[4.35rem] leading-[1.02] font-black tracking-[-0.045em] drop-shadow-xl">
+                <!-- Main Headline - dark text for light hero background matching original banner scheme -->
+                <h1 class="text-white text-[3.1rem] md:text-[3.85rem] lg:text-[4.35rem] leading-[1.02] font-black tracking-[-0.045em] hero-impact" style="-webkit-text-stroke: 0.5px black; text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black, -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;">
                     LAWN CARE &amp;<br>
                     PRESSURE /<br>
                     SOFT WASHING
                 </h1>
 
-                <!-- Big RCW Logo -->
-                <div class="mt-5 mb-6 flex items-center gap-x-4">
-                    <img src="assets/images/logo.jpg" alt="RCW Logo" 
-                         class="h-20 w-20 md:h-[92px] md:w-[92px] rounded-2xl ring-4 ring-white/70 object-cover shadow-2xl">
-                    <div>
-                        <div class="text-white">
-                            <span class="block text-[42px] md:text-[52px] font-black tracking-[-3.5px] leading-none">RCW</span>
-                        </div>
-                        <div class="text-emerald-300 text-sm font-bold tracking-[3.5px] -mt-1">EST 2018 • PROUDLY LOCAL</div>
-                    </div>
+                <!-- Big RCW Logo - prominent like original (text removed from right side of frame) -->
+                <div class="mt-5 mb-6">
+                    <img src="assets/images/logo.png" alt="RCW Logo" 
+                         class="h-20 w-28 md:h-[92px] md:w-[140px] rounded-2xl ring-4 ring-white/40 object-cover shadow-2xl">
                 </div>
 
-                <!-- Phone Number - Big and prominent like original -->
+                <!-- Phone Number - Big and prominent like original banner -->
                 <div class="mb-8">
                     <a href="tel:2394061334" 
-                       class="group inline-flex items-baseline gap-x-3 text-white hover:text-emerald-300 transition-colors">
-                        <span class="text-5xl md:text-[3.75rem] font-extrabold tracking-[-0.06em] drop-shadow-lg big-phone">239-406-1334</span>
+                       class="group inline-flex items-baseline gap-x-5 text-white hover:text-gray-200 transition-colors">
+                        <span class="text-5xl md:text-[3.75rem] font-extrabold tracking-[-0.02em] hero-impact text-white" style="-webkit-text-stroke: 0.5px black; text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black, -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;">239-406-1334</span>
                         <span class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-2xl bg-white/20 group-hover:bg-white/30 backdrop-blur transition-colors">
                             <i class="fa-solid fa-phone text-xl"></i>
                         </span>
                     </a>
-                    <div class="text-white/70 text-sm mt-0.5 ml-1 font-medium tracking-wider">CALL OR TEXT • 7 DAYS A WEEK</div>
+                    <div class="text-white/80 text-sm mt-2 ml-1 font-medium tracking-wider hero-impact" style="-webkit-text-stroke: 0.5px black; text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black, -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;">CALL OR TEXT • 7 DAYS A WEEK</div>
                 </div>
 
                 <!-- CTAs -->
                 <div class="flex flex-wrap gap-4">
                     <button onclick="showQuoteModal()"
-                            class="fun-btn flex-1 sm:flex-none items-center justify-center px-9 py-4 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 transition-all text-white text-lg font-extrabold rounded-3xl shadow-xl flex gap-x-3">
+                            class="fun-btn flex-1 sm:flex-none items-center justify-center px-9 py-4 bg-[#0f4c81] hover:bg-[#0c3d66] active:bg-black transition-all text-white text-lg font-extrabold rounded-3xl shadow-xl flex gap-x-3">
                         <span>GET MY FREE QUOTE</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                     
                     <a href="tel:2394061334"
-                       class="flex-1 sm:flex-none items-center justify-center px-8 py-4 border-2 border-white/90 hover:bg-white hover:text-[#0f4c81] transition-all text-white font-extrabold rounded-3xl text-lg flex gap-x-3 backdrop-blur-sm">
+                       class="flex-1 sm:flex-none items-center justify-center px-8 py-4 bg-[#0f4c81] hover:bg-[#0c3d66] active:bg-black transition-all text-white font-extrabold rounded-3xl shadow-xl text-lg flex gap-x-3">
                         <i class="fa-solid fa-phone"></i>
                         <span>CALL NOW</span>
                     </a>
                 </div>
 
-                <div class="mt-4">
-                    <button id="test-voice-btn" 
-                            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700 text-black text-sm font-bold rounded-2xl flex items-center gap-x-2 shadow">
-                        🔊 Test Voice (ElevenLabs)
-                    </button>
-                    <div class="text-[10px] text-white/50 mt-1">Temporary test button - requires running `node server.js` and visiting http://localhost:3000 (not file://)</div>
-                </div>
-
-                <div class="mt-6 text-xs text-white/70 font-medium flex items-center gap-x-2">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span>LICENSED &amp; INSURED • LLC #L126000168235</span>
-                </div>
             </div>
         </div>
 
         <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 hidden lg:flex flex-col items-center text-white/60 text-xs tracking-widest">
-            <span class="mb-1">SCROLL TO EXPLORE</span>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 hidden lg:flex flex-col items-center text-white/80 text-xs tracking-widest">
+            <span class="mb-1 hero-impact" style="-webkit-text-stroke: 0.5px black; text-shadow: -0.5px -0.5px 0 black, 0.5px -0.5px 0 black, -0.5px 0.5px 0 black, 0.5px 0.5px 0 black;">SCROLL TO EXPLORE</span>
             <i class="fa-solid fa-chevron-down animate-bounce"></i>
         </div>
 
@@ -412,7 +454,7 @@
             </a>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Service 1 -->
             <div class="service-card group bg-white border border-slate-200 rounded-3xl p-7 flex flex-col">
                 <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5 text-emerald-600 text-3xl group-hover:scale-110 transition-transform">
@@ -460,6 +502,30 @@
                     STARTING AT $65.00 / VISIT
                 </div>
             </div>
+
+            <!-- Service 5 -->
+            <div class="service-card group bg-white border border-slate-200 rounded-3xl p-7 flex flex-col">
+                <div class="w-14 h-14 rounded-2xl bg-teal-100 flex items-center justify-center mb-5 text-teal-600 text-3xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="font-extrabold text-2xl mb-2">Paver &amp; Concrete Sealing</h3>
+                <p class="text-slate-600 flex-1">High-quality sealers protect pavers, driveways, and patios from fading, stains, weeds, and harsh sun while restoring rich color and adding years of life.</p>
+                <div class="mt-6 pt-4 border-t text-sm font-bold text-teal-600">
+                    STARTING AT $180.00
+                </div>
+            </div>
+
+            <!-- Service 6 -->
+            <div class="service-card group bg-white border border-slate-200 rounded-3xl p-7 flex flex-col">
+                <div class="w-14 h-14 rounded-2xl bg-orange-100 flex items-center justify-center mb-5 text-orange-600 text-3xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-paint-roller"></i>
+                </div>
+                <h3 class="font-extrabold text-2xl mb-2">Driveway Color Staining</h3>
+                <p class="text-slate-600 flex-1">Revive faded or stained concrete with durable, rich color stains. Hides old oil spots and imperfections for a clean, uniform, fresh driveway look.</p>
+                <div class="mt-6 pt-4 border-t text-sm font-bold text-orange-600">
+                    STARTING AT $195.00
+                </div>
+            </div>
         </div>
 
         <div class="text-center mt-8 text-xs text-slate-500">
@@ -496,7 +562,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-bold text-slate-400">AGE</div>
-                                <div class="font-black text-2xl leading-none">4</div>
+                                <div class="font-black text-2xl leading-none">3</div>
                             </div>
                         </div>
                         <p class="mt-5 text-[15px] text-slate-600">Daisy takes her job extremely seriously. She hates dirt more than she hates the mailman. Her signature move is the “recoil spin” — looks painful, feels amazing for your concrete.</p>
@@ -527,10 +593,10 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-bold text-slate-400">AGE</div>
-                                <div class="font-black text-2xl leading-none">6</div>
+                                <div class="font-black text-2xl leading-none">3</div>
                             </div>
                         </div>
-                        <p class="mt-5 text-[15px] text-slate-600">Groot invented the “victory donut.” He believes every lawn should look like a golf course and every customer should receive a high-five (paw-five). Sunglasses are non-negotiable.</p>
+                        <p class="mt-5 text-[15px] text-slate-600">Groot invented the “victory donut.” He believes every lawn should look like a golf course and every customer should receive a high-five (paw-five).</p>
                         
                         <div class="mt-6 flex flex-wrap gap-2 text-xs">
                             <div class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-2xl font-bold">Mowing &amp; Striping</div>
@@ -560,27 +626,81 @@
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
-            <!-- House -->
+            <!-- House - Lehigh Acres Pressure Washing -->
             <div>
-                <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                    <img src="assets/images/house-before-after.jpg" alt="House Pressure Washing Before and After" class="w-full object-cover aspect-[16/9]">
-                    <div class="absolute top-4 left-4 bg-white/95 text-xs px-4 py-1 font-extrabold tracking-wider rounded-2xl shadow">PRESSURE + SOFT WASH</div>
+                <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200 bg-slate-100 p-1.5">
+                    <div class="absolute top-4 left-4 z-10 bg-white/95 text-[10px] px-3.5 py-0.5 font-extrabold tracking-widest rounded-2xl shadow">PRESSURE WASHING</div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <!-- BEFORE -->
+                        <div class="relative overflow-hidden rounded-[22px]">
+                            <img src="assets/images/lehigh-acres-before.png" alt="Before: House exterior with mold and algae buildup - Lehigh Acres pressure washing" class="w-full object-cover aspect-[4/3]">
+                            <div class="absolute top-3 left-3 bg-black/80 text-white text-[10px] font-extrabold tracking-[1.5px] px-3 py-[1px] rounded-2xl shadow">BEFORE</div>
+                        </div>
+                        <!-- AFTER -->
+                        <div class="relative overflow-hidden rounded-[22px]">
+                            <img src="assets/images/lehigh-acres-after.png" alt="After: Clean bright house siding and surfaces - Lehigh Acres pressure washing" class="w-full object-cover aspect-[4/3]">
+                            <div class="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-extrabold tracking-[1.5px] px-3 py-[1px] rounded-2xl shadow">AFTER</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex justify-between text-xs mt-2 px-1 font-bold text-slate-500">
                     <div>BEFORE → AFTER</div>
-                    <div class="text-emerald-600">CAPE CORAL, FL</div>
+                    <div class="text-emerald-600">LEHIGH ACRES, FL</div>
                 </div>
             </div>
 
             <!-- Lawn -->
             <div>
-                <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-                    <img src="assets/images/lawn-before-after.jpg" alt="Lawn Mowing Before and After" class="w-full object-cover aspect-[16/9]">
-                    <div class="absolute top-4 left-4 bg-white/95 text-xs px-4 py-1 font-extrabold tracking-wider rounded-2xl shadow">LAWN TRANSFORMATION</div>
+                <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200 bg-slate-100 p-1.5">
+                    <div class="absolute top-4 left-4 z-10 bg-white/95 text-[10px] px-3.5 py-0.5 font-extrabold tracking-widest rounded-2xl shadow">LAWN TRANSFORMATION</div>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <!-- BEFORE (Image #1) -->
+                        <div class="relative overflow-hidden rounded-[22px]">
+                            <img src="assets/images/lawn-before.jpg" alt="Before: Overgrown lawn needing care - RCW lawn mowing" class="w-full object-cover aspect-[4/3]">
+                            <div class="absolute top-3 left-3 bg-black/80 text-white text-[10px] font-extrabold tracking-[1.5px] px-3 py-[1px] rounded-2xl shadow">BEFORE</div>
+                        </div>
+                        <!-- FRESH CUT (Image #2) -->
+                        <div class="relative overflow-hidden rounded-[22px]">
+                            <img src="assets/images/lawn-fresh.jpg" alt="Freshly mowed lawn with clean stripes - RCW lawn transformation" class="w-full object-cover aspect-[4/3]">
+                        </div>
+                        <!-- Image #3 -->
+                        <div class="relative overflow-hidden rounded-[22px]">
+                            <img src="assets/images/lawn-after.jpg" alt="After: Manicured, clean, beautiful lawn - RCW lawn care" class="w-full object-cover aspect-[4/3]">
+                        </div>
+                    </div>
                 </div>
-                <div class="flex justify-between text-xs mt-2 px-1 font-bold text-slate-500">
-                    <div>BEFORE → AFTER</div>
-                    <div class="text-emerald-600">FORT MYERS, FL</div>
+                <div class="mt-2 px-1 text-right">
+                    <span class="text-xs font-bold text-emerald-600">FORT MYERS, FL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real crew photos + Family Owned callout -->
+        <div class="mt-10">
+            <div class="text-center mb-5">
+                <span class="inline-block bg-emerald-600 text-white uppercase text-xs font-extrabold tracking-[2.5px] px-6 py-1.5 rounded-3xl">FAMILY OWNED AND OPERATED</span>
+                <h3 class="mt-3 text-xl font-bold tracking-tight">More Real Projects from Our Crew</h3>
+                <p class="mt-1 text-sm text-slate-600 max-w-sm mx-auto">Hard work on properties across Southwest Florida — done right by a team that treats every yard like our own.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-1.jpg" alt="RCW crew on a real Southwest Florida property project" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-2.jpg" alt="RCW crew pressure washing a large driveway" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-3.jpg" alt="RCW team delivering exterior property services" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-4.jpg" alt="RCW crew performing lawn care and cleanup" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-5.jpg" alt="Professional soft washing and pressure washing in action" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-6.jpg" alt="RCW family-owned team on the job" class="w-full object-cover aspect-[4/3]">
                 </div>
             </div>
         </div>
@@ -602,55 +722,64 @@
     <!-- WHY RCW -->
     <section id="about" class="bg-slate-900 py-16 text-white">
         <div class="max-w-screen-2xl mx-auto px-6 md:px-10">
-            <div class="grid lg:grid-cols-2 gap-x-16 gap-y-12 items-center">
-                <div>
-                    <span class="text-emerald-400 text-xs font-black tracking-[2px]">THE RCW DIFFERENCE</span>
-                    <h2 class="text-white text-[2.85rem] leading-[1.05] font-black tracking-[-1.6px] mt-3">We don’t just cut grass.<br>We create curb appeal.</h2>
-                    
-                    <div class="mt-8 space-y-6 text-[15.2px]">
-                        <div class="flex gap-4">
-                            <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
-                            <div><span class="font-bold">Locally owned since 2018.</span> We live here. We care about your neighborhood looking great.</div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
-                            <div><span class="font-bold">Licensed, bonded, and fully insured.</span> LLC #L126000168235. Peace of mind included.</div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
-                            <div><span class="font-bold">Same-day quotes.</span> Most jobs completed within 48 hours of booking.</div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
-                            <div><span class="font-bold">The paw-rantee.</span> If you’re not smiling as big as our dogs, we make it right — no questions asked.</div>
-                        </div>
+            <div class="max-w-4xl mx-auto">
+                <span class="text-emerald-400 text-xs font-black tracking-[2px]">WHY OUR NEIGHBORS CHOOSE RCW</span>
+                <div class="mt-1"><span class="inline-block text-emerald-400 font-extrabold tracking-[2px] text-sm">FAMILY OWNED AND OPERATED</span></div>
+                <h2 class="text-white text-[2.85rem] leading-[1.05] font-black tracking-[-1.6px] mt-3">"RCW" Ruff Cut & Wash — Complete Exterior Transformation</h2>
+                
+                <p class="mt-6 text-[15.2px] text-white/90">
+                    Tired of hiring one company to mow your lawn and a completely different crew to wash your driveway? At "RCW" Ruff Cut & Wash, we solve that hassle. As a family-owned and operated business, we are your single-source experts for total property curb appeal. We combine precision lawn care with professional pressure washing to deliver massive, same-day visual makeovers. Leave for work in the morning and return home to a perfectly manicured yard and a sparkling clean house—all handled by one trusted team, on one invoice.
+                </p>
+                
+                <h3 class="mt-8 text-xl font-bold text-white">Why Our Neighbors Choose "RCW":</h3>
+                
+                <div class="mt-6 grid md:grid-cols-2 gap-6 text-[15.2px]">
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
+                        <div><span class="font-bold">Family Pride & Trust:</span> Family-owned, operated, and fully licensed and insured for your peace of mind.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
+                        <div><span class="font-bold">The Ultimate All-in-One Service:</span> One phone call manages your entire exterior maintenance strategy.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
+                        <div><span class="font-bold">Proactive HOA Protection:</span> We keep your lawns tight and concrete pristine to keep inspectors away.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-check text-lg"></i></div>
+                        <div><span class="font-bold">Property-Safe Methods:</span> We utilize gentle soft-washing techniques to protect your siding and roofs.</div>
                     </div>
                 </div>
-
-                <div class="bg-white/5 rounded-3xl p-8 backdrop-blur border border-white/10">
-                    <div class="grid grid-cols-2 gap-6 text-center">
-                        <div>
-                            <div class="text-6xl font-black text-emerald-400 stat-number">1800+</div>
-                            <div class="font-semibold text-white/80 tracking-wider text-xs mt-1">LAWNS MOWED</div>
-                        </div>
-                        <div>
-                            <div class="text-6xl font-black text-emerald-400 stat-number">940+</div>
-                            <div class="font-semibold text-white/80 tracking-wider text-xs mt-1">HOUSES WASHED</div>
-                        </div>
-                        <div>
-                            <div class="text-6xl font-black text-emerald-400 stat-number">98</div>
-                            <div class="font-semibold text-white/80 tracking-wider text-xs mt-1">% REPEAT CUSTOMERS</div>
-                        </div>
-                        <div>
-                            <div class="text-6xl font-black text-emerald-400 stat-number">4.98</div>
-                            <div class="font-semibold text-white/80 tracking-wider text-xs mt-1">GOOGLE RATING</div>
-                        </div>
+                
+                <h3 class="mt-8 text-xl font-bold text-white">Our Specialized Services:</h3>
+                
+                <div class="mt-6 grid md:grid-cols-3 lg:grid-cols-5 gap-5 text-[15.2px]">
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-seedling text-lg"></i></div>
+                        <div><span class="font-bold">Lawn Detailing:</span> Precision mowing, sharp edging, weed whipping, and seasonal cleanups.</div>
                     </div>
-                    
-                    <div class="text-center mt-8 border-t border-white/10 pt-6 text-xs text-white/60">
-                        Serving Fort Myers • Cape Coral • Naples • Bonita Springs • Estero
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-shower text-lg"></i></div>
+                        <div><span class="font-bold">Pressure &amp; Soft Washing:</span> Driveways, sidewalks, patios, fences, house siding, and roofs.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-shield-halved text-lg"></i></div>
+                        <div><span class="font-bold">Paver &amp; Concrete Sealing:</span> Protects and enhances pavers, patios, and concrete from fading and stains.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-paint-roller text-lg"></i></div>
+                        <div><span class="font-bold">Driveway Color Staining:</span> Restores and beautifies concrete with long-lasting rich color stains.</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-emerald-400"><i class="fa-solid fa-handshake text-lg"></i></div>
+                        <div><span class="font-bold">Curb Appeal Bundles:</span> Discounted, combined packages for ultimate, top-to-bottom property maintenance.</div>
                     </div>
                 </div>
+                
+                <p class="mt-8 text-[15.2px] text-white/90">
+                    At RCW, we do more than just cut grass and spray water—we treat your home like our own, protect your investment, and give you your weekends back.
+                </p>
             </div>
         </div>
     </section>
@@ -717,7 +846,7 @@
         <div class="max-w-screen-2xl mx-auto px-6 md:px-10 grid md:grid-cols-2 gap-y-9">
             <div>
                 <div class="flex items-center gap-x-3 mb-4">
-                    <img src="assets/images/logo.jpg" class="h-9 w-9 rounded-xl" alt="RCW">
+                    <img src="assets/images/logo.png" class="h-9 w-9 rounded-xl" alt="RCW">
                     <div>
                         <span class="font-black text-2xl text-white tracking-[-1.5px]">RCW</span>
                         <span class="font-bold text-xs text-white/50 tracking-[1.5px] ml-px">LAWN CARE</span>
@@ -742,6 +871,9 @@
                     <div class="space-y-[5px]">
                         <div>Fort Myers</div>
                         <div>Cape Coral</div>
+                        <div>Lehigh Acres</div>
+                        <div>LaBelle</div>
+                        <div>Immokalee</div>
                         <div>Naples &amp; Bonita</div>
                         <div>Estero &amp; Estero Bay</div>
                     </div>
@@ -749,7 +881,7 @@
                 <div>
                     <div class="font-bold text-white mb-2.5">CONTACT</div>
                     <a href="tel:2394061334" class="block hover:text-white font-bold text-lg text-white">239-406-1334</a>
-                    <div class="mt-px">info@rcwlawn.com</div>
+                    <a href="mailto:ruffcutwash@gmail.com" class="mt-px hover:text-white">ruffcutwash@gmail.com</a>
                     
                     <div class="mt-4">
                         <button onclick="showQuoteModal()" class="text-xs font-bold underline hover:text-white">REQUEST QUOTE →</button>
@@ -805,6 +937,8 @@
                         <option value="Lawn Care / Mowing">Lawn Care &amp; Mowing (Weekly or Bi-weekly)</option>
                         <option value="Pressure Washing">Pressure Washing (Driveway / Patio / etc)</option>
                         <option value="Soft Washing">Soft Washing (House / Roof)</option>
+                        <option value="Paver & Concrete Sealing">Paver &amp; Concrete Sealing</option>
+                        <option value="Driveway Color Staining">Driveway Color Staining</option>
                         <option value="Full Package">Full Package (Mow + Wash + Fertilize)</option>
                         <option value="Other">Other / Not sure yet</option>
                     </select>
@@ -884,13 +1018,12 @@
         }
 
         // Make sure the hero video autoplays automatically (no play button)
-        // Video is background visual; the dogs' voices are handled separately via speechSynthesis (American voices)
+        // Video is background visual only (voices removed per request)
         function initHeroVideo() {
             const video = document.getElementById('hero-video');
             if (!video) return;
 
-            // Autoplay the video (muted to ensure it starts reliably across browsers)
-            // The TTS voices will provide the dogs' spoken parts automatically
+            // Autoplay the video muted
             video.muted = true;
             video.play().catch(() => {
                 // If autoplay fails completely, try again on any user interaction
@@ -903,165 +1036,6 @@
             video.addEventListener('ended', () => {
                 video.play();
             });
-        }
-
-        // ElevenLabs TTS integration for Daisy & Groot
-        // Secure backend proxy at /api/tts (uses ELEVENLABS_API_KEY on server only)
-        // Timeline triggers fetch audio + play over video with 20% ducking.
-        // American voices via specific ElevenLabs voice IDs.
-        // Auto starts with video on page load. No TTS in browser (no computer voice on client).
-        function initVideoDialogue() {
-            const video = document.getElementById('hero-video');
-            if (!video) return;
-
-            const DAISY_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // Rachel - natural American female
-            const GROOT_VOICE_ID = "pNInz6obpgDQGcFmaJgB"; // Adam - natural American male
-
-            const dialogueTimeline = [
-                { time: 1.5, text: "Hello, welcome to Ruff Cut and Wash. I'm Daisy, your pressure washer specialist. This is my partner.", voiceId: DAISY_VOICE_ID },
-                { time: 6.5, text: "Hi, I'm Groot, your lawn care specialist.", voiceId: GROOT_VOICE_ID },
-                { time: 9.5, text: "We're the Ruff Crew!", voiceId: DAISY_VOICE_ID },
-                { time: 10.8, text: "We're the Ruff Crew!", voiceId: GROOT_VOICE_ID }
-            ];
-
-            let lastTriggeredIndex = -1;
-            let captionEl = null;
-            let preloadedAudios = [];
-
-            // Create caption bubble (kept for visual "speech" reinforcement)
-            captionEl = document.createElement('div');
-            captionEl.id = 'mascot-dialogue';
-            captionEl.style.cssText = `
-                position: absolute; 
-                bottom: 18%; 
-                left: 50%; 
-                transform: translateX(-50%); 
-                background: rgba(15, 76, 129, 0.82); 
-                color: #fff; 
-                padding: 8px 16px; 
-                border-radius: 12px; 
-                font-size: 0.85rem; 
-                font-weight: 600; 
-                letter-spacing: 0.01em; 
-                z-index: 35; 
-                opacity: 0; 
-                transition: opacity 0.25s ease; 
-                pointer-events: none; 
-                max-width: 88%; 
-                text-align: center; 
-                white-space: normal; 
-                line-height: 1.3;
-                box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
-            `;
-            const heroContainer = video.parentElement;
-            if (heroContainer) heroContainer.appendChild(captionEl);
-
-            function showCaption(text) {
-                if (!captionEl) return;
-                captionEl.textContent = text;
-                captionEl.style.opacity = '1';
-                clearTimeout(captionEl._hideTimer);
-                captionEl._hideTimer = setTimeout(() => {
-                    if (captionEl && captionEl.textContent === text) {
-                        captionEl.style.opacity = '0';
-                    }
-                }, 3700);
-            }
-
-            function hideCaption() {
-                if (captionEl) captionEl.style.opacity = '0';
-            }
-
-            async function fetchAndCreateAudio(line) {
-                try {
-                    const res = await fetch('/api/tts', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: line.text, voiceId: line.voiceId })
-                    });
-                    if (!res.ok) throw new Error('TTS fetch failed: ' + res.status);
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
-                    const audio = new Audio(url);
-                    audio.preload = 'auto';
-                    return audio;
-                } catch (e) {
-                    console.error('Failed to load ElevenLabs audio for:', line.text, e);
-                    return null;
-                }
-            }
-
-            async function preloadAudios() {
-                preloadedAudios = new Array(dialogueTimeline.length).fill(null);
-                // Preload in parallel for better readiness
-                const promises = dialogueTimeline.map((line, i) => 
-                    fetchAndCreateAudio(line).then(audio => { preloadedAudios[i] = audio; })
-                );
-                await Promise.all(promises);
-                console.log('ElevenLabs audios preloaded for timeline.');
-            }
-
-            function playAudioForIndex(index) {
-                const audio = preloadedAudios[index];
-                if (!audio) {
-                    console.warn('No preloaded audio for index', index);
-                    return;
-                }
-                const vid = document.getElementById('hero-video');
-                audio.currentTime = 0;
-                if (vid) vid.volume = 0.2; // Duck video to 20%
-                audio.play().then(() => {
-                    audio.onended = () => {
-                        if (vid) vid.volume = 1.0;
-                    };
-                }).catch(err => {
-                    console.warn('Audio playback error (may need user gesture):', err);
-                    if (vid) vid.volume = 1.0;
-                });
-            }
-
-            // Timeupdate - play the corresponding ElevenLabs audio + show caption
-            video.addEventListener('timeupdate', () => {
-                const currentTime = video.currentTime;
-
-                if (currentTime < 0.7 && lastTriggeredIndex >= dialogueTimeline.length - 1) {
-                    lastTriggeredIndex = -1;
-                    hideCaption();
-                    preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
-                }
-
-                dialogueTimeline.forEach((line, index) => {
-                    if (currentTime >= line.time && lastTriggeredIndex < index) {
-                        lastTriggeredIndex = index;
-                        playAudioForIndex(index);
-                        showCaption(line.text);
-                    }
-                });
-            });
-
-            video.addEventListener('seeked', () => {
-                lastTriggeredIndex = -1;
-                hideCaption();
-                preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
-            });
-
-            video.addEventListener('ended', () => {
-                lastTriggeredIndex = -1;
-                hideCaption();
-                preloadedAudios.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
-            });
-
-            // Auto-start everything when browser opens (no play button)
-            // Video autoplays muted; ElevenLabs audios play at timeline times with ducking
-            video.muted = true;
-            video.play().catch(() => {
-                document.addEventListener('click', () => {
-                    video.play().catch(() => {});
-                }, { once: true });
-            });
-
-            // Start preloading the audio clips immediately
-            preloadAudios();
         }
 
         // Quote modal
@@ -1248,7 +1222,6 @@
             initTailwind();
             initNavbar();
             initHeroVideo();
-            initVideoDialogue();
             initSmoothScroll();
             initKeyboard();
             initExtraDelight();
@@ -1257,56 +1230,14 @@
             if (location.protocol === 'file:') {
                 const warn = document.createElement('div');
                 warn.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:white;padding:8px;text-align:center;z-index:100;font-size:13px;';
-                warn.innerHTML = '⚠️ Opened as local file. API routes (like Test Voice) require running <code>node server.js</code> and visiting <a href="http://localhost:3000" style="color:white;text-decoration:underline">http://localhost:3000</a> . Close this and use the server URL.';
+                warn.innerHTML = '⚠️ Opened as local file. Some interactive features require running <code>node server.js</code> and visiting <a href="http://localhost:3000" style="color:white;text-decoration:underline">http://localhost:3000</a> . Close this and use the server URL.';
                 document.body.prepend(warn);
-            }
-            
-            // Temporary 'Test Voice' button handler for ElevenLabs backend
-            const testBtn = document.getElementById('test-voice-btn');
-            if (testBtn) {
-                testBtn.addEventListener('click', async () => {
-                    if (location.protocol === 'file:') {
-                        alert('Please run the server first: open PowerShell in this folder, run "node server.js" (after setting real key in .env), then open http://localhost:3000 in browser (not the .html file directly). The /api/test-voice only works when served by the backend.');
-                        testBtn.disabled = false;
-                        testBtn.textContent = '🔊 Test Voice (ElevenLabs)';
-                        return;
-                    }
-                    try {
-                        testBtn.disabled = true;
-                        testBtn.textContent = 'Loading...';
-                        const res = await fetch('/api/test-voice');
-                        if (!res.ok) {
-                            const err = await res.json().catch(() => ({}));
-                            throw new Error(err.error || 'Failed to fetch test voice');
-                        }
-                        const blob = await res.blob();
-                        const audioUrl = URL.createObjectURL(blob);
-                        const audio = new Audio(audioUrl);
-                        const vid = document.getElementById('hero-video');
-                        if (vid) vid.volume = 0.2;
-                        audio.onended = () => {
-                            if (vid) vid.volume = 1.0;
-                            URL.revokeObjectURL(audioUrl);
-                        };
-                        await audio.play();
-                        testBtn.textContent = '✅ Played!';
-                        setTimeout(() => {
-                            testBtn.textContent = '🔊 Test Voice (ElevenLabs)';
-                            testBtn.disabled = false;
-                        }, 2000);
-                    } catch (e) {
-                        console.error(e);
-                        alert('Test voice failed: ' + e.message + '\nMake sure server is running with valid ELEVENLABS_API_KEY in .env');
-                        testBtn.textContent = '🔊 Test Voice (ElevenLabs)';
-                        testBtn.disabled = false;
-                    }
-                });
             }
             
             // Accessibility: make sure video has proper controls label
             const video = document.getElementById('hero-video');
             if (video) {
-                video.setAttribute('aria-label', 'RCW mascot dogs Daisy and Groot mowing grass and pressure washing. The dogs speak at timed moments using backend TTS.');
+                video.setAttribute('aria-label', 'RCW lawn care and pressure washing hero video.');
             }
             
             // Optional: prefill a phone number example in some cases
