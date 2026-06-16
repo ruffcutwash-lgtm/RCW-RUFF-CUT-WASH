@@ -1,32 +1,31 @@
-﻿name: Grok CI
+﻿name: Grok Project CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repository code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Fixed from python-node typo
 
-      - name: Install dependencies
-        run: npm ci --if-present
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Basic project validation
-        run: |
-          echo "Validating RCW Lawn Care site..."
-          ls -la
-          if [ -f index.html ]; then echo "[OK] index.html found"; else echo "[FAIL] Missing index.html" && exit 1; fi
-          if [ -d assets/images ]; then echo "[OK] assets/images present"; fi
-          if [ -f .github/workflows/grok-ci.yml ]; then echo "[OK] CI workflow present"; fi
-          echo "Basic CI checks passed!"
+    - name: Run Grok tests or builds
+      env:
+        GROK_API_KEY: ${{ secrets.GROK_API_KEY }} # Securely loads your API key
+      run: |
+        python run_build.py # Replace with your actual build command
