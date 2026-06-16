@@ -1,0 +1,32 @@
+﻿name: Grok CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --if-present
+
+      - name: Basic project validation
+        run: |
+          echo "Validating RCW Lawn Care site..."
+          ls -la
+          if [ -f index.html ]; then echo "[OK] index.html found"; else echo "[FAIL] Missing index.html" && exit 1; fi
+          if [ -d assets/images ]; then echo "[OK] assets/images present"; fi
+          if [ -f .github/workflows/grok-ci.yml ]; then echo "[OK] CI workflow present"; fi
+          echo "Basic CI checks passed!"
