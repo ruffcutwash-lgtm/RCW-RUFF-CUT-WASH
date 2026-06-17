@@ -267,7 +267,7 @@
                 <!-- Logo -->
                 <div class="flex items-center gap-x-3">
                     <div class="flex items-center">
-                        <img src="assets/images/logo.png" alt="RCW Logo" class="h-11 w-11 rounded-xl object-cover ring-2 ring-offset-2 ring-offset-white ring-[#0f4c81]/20">
+                        <img src="assets/images/logo.png" alt="RCW Logo" class="h-11 w-20 rounded-xl object-cover ring-2 ring-offset-2 ring-offset-white ring-[#0f4c81]/20">
                         <div class="ml-2.5">
                             <div class="flex items-baseline">
                                 <span class="rcw-logo-text text-3xl font-black tracking-tighter text-[#0f4c81]">RCW</span>
@@ -335,13 +335,13 @@
 
     <!-- HERO -->
     <header class="relative h-[100dvh] min-h-[680px] pt-16 flex items-center justify-start overflow-hidden bg-white">
-        <!-- Background Video: full inset-0 (no box shift). object-position -20% + scale(1.18) translateX(10%) from right. Tiny scale bump to crop the remaining thin white strip on left. Dogs position unchanged. Everything else same. -->
+        <!-- Background Video: full inset-0 (no box shift). object-position 10% 35% + scale(1.03) translateX(3%) translateY(6%) from right. Even lower horizontal to crop more left white. Everything else same. -->
         <video id="hero-video"
                class="hero-video absolute inset-0 z-0"
                autoplay 
                loop 
                playsinline
-               style="width: 100%; height: 100%; object-fit: cover; object-position: -20% center; transform: scale(1.18) translateX(10%); transform-origin: right center;"
+               style="width: 100%; height: 100%; object-fit: cover; object-position: 10% 35% center; transform: scale(1.03) translateX(3%) translateY(6%); transform-origin: right center;"
                poster="assets/images/banner.jpg">
             <source src="assets/videos/hero.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -561,7 +561,7 @@
                 <div class="mascot-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
                     <div class="relative h-72 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
                         <img src="assets/images/real-schnauzer.jpg" alt="Daisy the Schnauzer - photoreal" 
-                             class="dog-shadow max-h-[230px] object-contain">
+                             class="dog-shadow max-h-[218px] object-contain">
                         <!-- Water effect badge -->
                         <div class="absolute top-5 right-5 px-4 py-1 bg-white/90 rounded-2xl text-xs font-extrabold flex items-center gap-x-1.5 shadow">
                             <i class="fa-solid fa-tint text-sky-500"></i> 
@@ -593,7 +593,7 @@
                 <div class="mascot-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
                     <div class="relative h-72 bg-gradient-to-br from-emerald-800 to-emerald-900 flex items-center justify-center">
                         <img src="assets/images/real-frenchie.jpg" alt="Groot the French Bulldog - photoreal" 
-                             class="dog-shadow max-h-[225px] object-contain">
+                             class="dog-shadow max-h-[214px] object-contain">
                         <div class="absolute top-5 right-5 px-4 py-1 bg-white/90 rounded-2xl text-xs font-extrabold flex items-center gap-x-1.5 shadow">
                             <i class="fa-solid fa-tractor text-emerald-500"></i> 
                             <span>GROOT</span>
@@ -706,10 +706,12 @@
                     <img src="assets/images/real-job-2.jpg" alt="RCW crew pressure washing a large driveway" class="w-full object-cover aspect-[4/3]">
                 </div>
                 <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
+                    <img src="assets/images/real-job-4.jpg" alt="RCW crew performing lawn care and cleanup" class="w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
                     <img src="assets/images/real-job-3.jpg" alt="RCW team delivering exterior property services" class="w-full object-cover aspect-[4/3]">
                 </div>
                 <div class="overflow-hidden rounded-3xl border border-slate-200 shadow">
-                    <img src="assets/images/real-job-4.jpg" alt="RCW crew performing lawn care and cleanup" class="d-3xl border border-slate-200 shadow">
                     <img src="assets/images/real-job-6.jpg" alt="RCW family-owned team on the job" class="w-full object-cover aspect-[4/3]">
                 </div>
             </div>
@@ -718,7 +720,7 @@
         <!-- Team fun photo -->
         <div class="mt-6">
             <div class="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl">
-                <img src="assets/images/real-team.jpg" alt="RCW Mascots Daisy and Groot on the job - photoreal from backyard" class="w-full object-cover aspect-[16/8.5] md:aspect-[21/9]">
+                <img src="assets/images/real-team.jpg" alt="RCW Mascots Daisy and Groot on the job - photoreal from backyard" class="w-full object-cover object-top aspect-[16/8.5] md:aspect-[21/9]">
                 <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-end">
                     <div class="p-7 text-white max-w-md">
                         <div class="uppercase text-xs font-black tracking-[1.5px]">THE DREAM TEAM IN ACTION</div>
