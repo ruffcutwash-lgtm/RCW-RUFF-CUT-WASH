@@ -32,8 +32,6 @@
 
         .hero-video {
             object-fit: cover;
-            width: 100%;
-            height: 100%;
         }
 
         .section-header {
@@ -325,24 +323,18 @@
     </nav>
 
     <!-- HERO -->
-    <header class="relative h-[100dvh] min-h-[680px] pt-16 flex items-center justify-center overflow-hidden bg-white">
-        <!-- Background Video - strongly biased to the right so dogs appear further right in the hero area, clear of the left text -->
+    <header class="relative h-[100dvh] min-h-[680px] pt-16 flex items-center justify-start overflow-hidden bg-white">
+        <!-- Background Video: full inset-0 (no box shift). object-position -20% + scale(1.18) translateX(10%) from right. Tiny scale bump to crop the remaining thin white strip on left. Dogs position unchanged. Everything else same. -->
         <video id="hero-video"
                class="hero-video absolute inset-0 z-0"
                autoplay 
                loop 
                playsinline
-               style="object-position: right center;"
+               style="width: 100%; height: 100%; object-fit: cover; object-position: -20% center; transform: scale(1.18) translateX(10%); transform-origin: right center;"
                poster="assets/images/banner.jpg">
             <source src="assets/videos/hero.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-
-        <!-- Subtle water-inspired overlay matching original banner scheme (light blue with water splash on left) -->
-        <div class="absolute inset-0 bg-gradient-to-b from-white/30 via-white/10 to-white/20 z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0ea5e9]/20 via-transparent to-transparent z-10"></div>
-        <!-- Left water splash visual accent inspired by original banner -->
-        <div class="absolute inset-0 z-10 pointer-events-none" style="background: radial-gradient(circle at 5% 50%, rgba(14,165,233,0.25) 0%, transparent 40%);"></div>
 
         <!-- Floating leaves using PNG images (with transparent backgrounds) scattered throughout the entire hero background for a natural floating-in-the-air effect, like the original banner.
              Distributed across left/center/right and top/mid/lower to fill the frame behind the content. -->
@@ -356,11 +348,22 @@
             <img src="assets/images/leaf1.png" class="leaf" style="top: 22%; right: 5%; width: 48px; transform: rotate(25deg); animation-delay: -6.8s;">
             <img src="assets/images/leaf3.png" class="leaf" style="top: 38%; left: 55%; width: 78px; transform: rotate(-6deg); animation-delay: -1.2s;">
             <img src="assets/images/leaf5.png" class="leaf" style="top: 68%; left: 12%; width: 82px; transform: rotate(15deg); animation-delay: -7.5s;">
+
+            <!-- Additional leaves on left side and wrapping top for natural coverage across the full hero -->
+            <img src="assets/images/leaf2.png" class="leaf" style="top: 4%; left: 1%; width: 62px; transform: rotate(-32deg); animation-delay: -2.3s; opacity: 0.78;">
+            <img src="assets/images/leaf4.png" class="leaf" style="top: 14%; left: 0%; width: 78px; transform: rotate(18deg); animation-delay: -0.7s;">
+            <img src="assets/images/leaf1.png" class="leaf" style="top: 0%; left: 9%; width: 55px; transform: rotate(-8deg); animation-delay: -4.2s; opacity: 0.72;">
+            <img src="assets/images/leaf5.png" class="leaf" style="top: 9%; left: 2%; width: 48px; transform: rotate(42deg); animation-delay: -1.4s;">
+            <img src="assets/images/leaf3.png" class="leaf" style="top: 26%; left: 3%; width: 68px; transform: rotate(-25deg); animation-delay: -5.8s; opacity: 0.8;">
+            <img src="assets/images/leaf2.png" class="leaf" style="top: -2%; left: 18%; width: 72px; transform: rotate(12deg); animation-delay: -3.1s;">
+            <img src="assets/images/leaf4.png" class="leaf" style="top: 6%; left: 13%; width: 42px; transform: rotate(-48deg); animation-delay: -0.3s; opacity: 0.7;">
+            <img src="assets/images/leaf1.png" class="leaf" style="top: 19%; left: 5%; width: 58px; transform: rotate(35deg); animation-delay: -6.5s;">
         </div>
 
-        <!-- Hero Content - narrow left column (no transparent banner/panel) so dogs are moved further right in the video area and clearly visible -->
-        <div class="relative z-30 max-w-screen-2xl mx-auto px-6 md:px-10 w-full">
-            <div class="max-w-sm">
+        <!-- Hero Content - narrow left column (no transparent banner/panel) so dogs are moved further right in the video area and clearly visible.
+             Text kept strictly left-aligned and nudged further left (margin -80px) to stay clear of the French Bulldog on the right. -->
+        <div class="relative z-30 max-w-screen-2xl mx-auto pl-0 pr-6 md:pl-0 md:pr-10 w-full">
+            <div class="max-w-sm" style="margin-left: -80px;">
                 <!-- Top badge - styled after original banner -->
                 <div class="inline-flex items-center gap-x-2 bg-white/95 backdrop-blur px-5 py-1 rounded-3xl mb-6 shadow border border-[#0f4c81]/10">
                     <div class="flex -space-x-1">
@@ -1057,46 +1060,74 @@
             modal.classList.add('hidden');
         }
 
-        // Handle form submission (client side only)
+        // Handle form submission - sends to email + SMS via device
         function submitQuoteForm(e) {
             e.preventDefault();
             
             const form = document.getElementById('quote-form');
-            const btns = form.querySelectorAll('button');
             
-            const originalText = btns[0] ? btns[0].innerHTML : '';
+            // Collect form data
+            const first = document.getElementById('first-name').value.trim();
+            const last = document.getElementById('last-name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const service = document.getElementById('service').value;
+            const notes = document.getElementById('notes').value.trim() || 'None provided';
             
-            if (btns[0]) {
-                btns[0].disabled = true;
-                btns[0].innerHTML = `<span class="flex items-center justify-center gap-x-2"><i class="fa-solid fa-spinner fa-spin"></i> SENDING TO THE DOGS...</span>`;
-            }
+            const fullName = `${first} ${last}`;
             
-            // Simulate network request
+            const bodyText = `New Free Quote Request from RCW Website
+
+Name: ${fullName}
+Phone: ${phone}
+Service Address / City: ${address}
+Service Requested: ${service}
+Additional Notes: ${notes}
+
+Submitted on: ${new Date().toLocaleString()}
+Thank you!`;
+            
+            const subject = encodeURIComponent(`Free Quote Request - ${fullName} (${address})`);
+            const body = encodeURIComponent(bodyText);
+            
+            // Email URL
+            const emailUrl = `mailto:RUFFCUTWASH@GMAIL.COM?subject=${subject}&body=${body}`;
+            
+            // SMS URL (works great on mobile, opens Messages app)
+            const smsUrl = `sms:2394061334?body=${body}`;
+            
+            // Automatically open email and SMS apps (pre-filled)
+            window.open(emailUrl, '_blank');
             setTimeout(() => {
-                // Success state
-                form.innerHTML = `
-                    <div class="py-6 text-center">
-                        <div class="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-5">
-                            <i class="fa-solid fa-check text-emerald-500 text-4xl"></i>
-                        </div>
-                        
-                        <div class="font-extrabold text-2xl tracking-tight text-emerald-700">Quote request sent!</div>
-                        <p class="mt-3 text-slate-600">Thanks! One of our humans (or Daisy &amp; Groot) will call or text you within the hour.</p>
-                        
-                        <div class="text-xs bg-emerald-50 text-emerald-700 font-bold px-4 py-2 mt-6 rounded-2xl inline-block">CONFIRMATION #RCW-${Math.floor(100000 + Math.random() * 900000)}</div>
-                        
-                        <div class="mt-8">
-                            <button onclick="hideQuoteModal(); window.location.reload()" 
-                                    class="px-8 py-3 text-sm font-bold border border-emerald-600 text-emerald-700 rounded-2xl active:bg-emerald-50">
-                                CLOSE WINDOW
-                            </button>
-                        </div>
+                window.open(smsUrl, '_blank');
+            }, 350);
+            
+            // Update form to success message
+            form.innerHTML = `
+                <div class="py-6 text-center">
+                    <div class="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-check text-emerald-500 text-4xl"></i>
                     </div>
-                `;
-                
-                // Fun: trigger a few floating leaves / water drops
-                launchConfetti();
-            }, 1250);
+                    
+                    <div class="font-extrabold text-2xl tracking-tight text-emerald-700">Request prepared!</div>
+                    <p class="mt-3 text-slate-600">Your quote request has been sent to your email client and text messaging app.</p>
+                    <p class="mt-2 text-sm text-slate-500">Please review and hit SEND in the email app (to RUFFCUTWASH@GMAIL.COM) and Messages app (to 239-406-1334).</p>
+                    
+                    <div class="text-xs bg-emerald-50 text-emerald-700 font-bold px-4 py-2 mt-6 rounded-2xl inline-block">CONFIRMATION #RCW-${Math.floor(100000 + Math.random() * 900000)}</div>
+                    
+                    <div class="mt-8">
+                        <button onclick="hideQuoteModal(); window.location.reload()" 
+                                class="px-8 py-3 text-sm font-bold border border-emerald-600 text-emerald-700 rounded-2xl active:bg-emerald-50">
+                            CLOSE
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Optional fun effect
+            if (typeof launchConfetti === 'function') {
+                setTimeout(() => launchConfetti(), 400);
+            }
         }
 
         // Silly fun confetti using CSS + DOM (water drops + grass + leaves)
