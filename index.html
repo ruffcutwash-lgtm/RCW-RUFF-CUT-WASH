@@ -249,6 +249,13 @@
         .rcw-shield {
             filter: drop-shadow(0 4px 6px rgb(15 76 129 / 0.3));
         }
+
+        @media (max-width: 768px) {
+            #hero-video {
+                object-position: 35% 40% !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 overflow-x-hidden">
@@ -373,8 +380,8 @@
 
         <!-- Hero Content - narrow left column (no transparent banner/panel) so dogs are moved further right in the video area and clearly visible.
              Text kept strictly left-aligned and nudged further left (margin -80px) to stay clear of the French Bulldog on the right. -->
-        <div class="relative z-30 max-w-screen-2xl mx-auto pl-0 pr-6 md:pl-0 md:pr-10 w-full">
-            <div class="max-w-sm" style="margin-left: -80px;">
+        <div class="relative z-30 max-w-screen-2xl mx-auto pl-4 pr-6 sm:pl-0 md:pl-0 md:pr-10 w-full">
+            <div class="max-w-sm -ml-2 sm:-ml-8 md:-ml-12 lg:-ml-20">
                 <!-- Top badge - styled after original banner -->
                 <div class="inline-flex items-center gap-x-2 bg-white/95 backdrop-blur px-5 py-1 rounded-3xl mb-6 shadow border border-[#0f4c81]/10">
                     <div class="flex -space-x-1">
